@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const userSchema=mongoose.Schema({
     name:{
         type:String,
         minLength: [3,"Minimum length of 3 is required"],
-        maxLength: [3,"Minimum length of 3 is required"],
+        maxLength: [30,"Maximum length of 30 is allowed"],
         required:[true,"name is required"]
     },
     email:{
@@ -37,4 +38,10 @@ this.password=await bcrypt.hash(this.password,10);
 userSchema.methods.comparePassword=async (enteredPassword)=>{
     return await bcrypt.compare(enteredPassword,this.password);
 }
+
+userSchema.methods.getJWTToken=()=>{
+    return jwt.sign({id:this._id},process.env.JWT_SECRET_KEY,{
+        expiresIn:process.env.JWT_EXPIRE
+    })
+};
 
