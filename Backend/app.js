@@ -7,6 +7,8 @@ const userRouter = require('./routes/userRouter.js');
 const applicationRouter = require('./routes/userRouter.js');
 const jobRouter = require('./routes/jobRouter.js');
 const dbConnection = require('./database/dbConnection.js');
+const errorMiddleware = require('./middlewares/error.js');
+
 
 const app =express();
 dotenv.config({path:"./config/config.env"});
@@ -37,6 +39,9 @@ app.use(express.urlencoded({extended:true}));
 app.use('/api/v1/user',userRouter);
 app.use('/api/v1/application',applicationRouter);
 app.use('/api/v1/job',jobRouter);
+app.use(errorMiddleware);
+
+
 dbConnection();
 
 module.exports=app;
