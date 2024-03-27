@@ -1,6 +1,8 @@
 const app = require("./app.js");
 const cloudinary = require("cloudinary");
 
+
+
 cloudinary.v2.config({
   cloud_name: process.env.CLOUDINARY_CLIENT_NAME,
   api_key: process.env.CLOUDINARY_CLIENT_API,
@@ -10,3 +12,6 @@ cloudinary.v2.config({
 app.listen(process.env.PORT, () => {
   console.log(`Server is up and listening on port ${process.env.PORT}`);
 });
+
+
+
