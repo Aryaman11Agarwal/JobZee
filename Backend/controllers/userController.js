@@ -1,8 +1,9 @@
 const catchAsyncError = require('../middlewares/catchAsyncError.js');
 const { ErrorHandler } = require('../middlewares/error.js');
 const userModel = require('../models/userModel.js');
-const sendToken = require('../utils/jwtToken.js');
+
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const register=catchAsyncError(async (req,res,next)=>{
     const {name,email,phone,role,password}=req.body;
@@ -24,7 +25,27 @@ const register=catchAsyncError(async (req,res,next)=>{
         password
     });
 
-    sendToken(user,200,res,"user created successfully")
+    jwt.sign({id:user._id},process.env.JWT_SECRET_KEY,(err,token)=>{
+        if(!err){
+          const options={
+            maxAge :process.env.COOKIE_EXPIRE*24*60*60*1000,
+            httpOnly:true
+          }
+        
+          res.status(200).cookie("token",token,options).send({
+            success:true,
+            user,
+            message:"user created successfully",
+            token:token
+          })
+        }
+    
+        else{
+            console.log("in error");
+           return next(err);
+        }
+    
+      })
 });
 
 
@@ -53,7 +74,27 @@ const login=catchAsyncError(async (req,res,next)=>{
           return  next(new ErrorHandler("user with this role not found"));
         }
 
-        sendToken(user,200,res,"User Logged in successfully");
+        jwt.sign({id:user._id},process.env.JWT_SECRET_KEY,(err,token)=>{
+            if(!err){
+              const options={
+                maxAge :process.env.COOKIE_EXPIRE*24*60*60*1000,
+                httpOnly:true
+              }
+            
+              res.status(200).cookie("token",token,options).send({
+                success:true,
+                user,
+                message:"user created successfully",
+                token:token
+              })
+            }
+        
+            else{
+                console.log("in error");
+               return next(err);
+            }
+        
+          })
      }
      else{
         return next(new ErrorHandler("Invalid Email or password"),404);
