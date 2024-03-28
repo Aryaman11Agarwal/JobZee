@@ -44,11 +44,7 @@ this.password=await bcrypt.hash(this.password,10);
 
 
 
-userSchema.methods.getJWTToken=()=>{
-    return jwt.sign({id:this._id},process.env.JWT_SECRET_KEY,{
-        expiresIn: process.env.JWT_EXPIRE
-    })
-};
+
 
 
 const userModel=mongoose.model("users",userSchema);
