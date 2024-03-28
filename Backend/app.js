@@ -7,7 +7,7 @@ const userRouter = require('./routes/userRouter.js');
 const applicationRouter = require('./routes/userRouter.js');
 const jobRouter = require('./routes/jobRouter.js');
 const dbConnection = require('./database/dbConnection.js');
-const errorMiddleware = require('./middlewares/error.js');
+const {errorMiddleware} = require('./middlewares/error.js');
 
 
 const app =express();
