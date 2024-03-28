@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const validator = require('validator');
 
 const userSchema=mongoose.Schema({
     name:{
@@ -15,12 +16,18 @@ const userSchema=mongoose.Schema({
         validate:[validator.isEmail,"please provide a valid email"]
     },
     phone:{
-        type:number,
+        type:Number,
         required:[true,"Please provide a phone number"]
     },
     password:{
         type:String,
         required:[true,"Please provide a password"],
+        
+       
+    },
+    role:{
+        type:String,
+        required:[true,"Please provide a role"],
         enum:["Job Seeker","Employer"]
     },
     createdAt:{
@@ -29,19 +36,17 @@ const userSchema=mongoose.Schema({
     }
 },{timestamps:true});
 
-userSchema.pre('save',async (next)=>{
+userSchema.pre('save',async function (next){
  if(!this.isModified('password'))
  next();
 this.password=await bcrypt.hash(this.password,10);
 });
 
-userSchema.methods.comparePassword=async (enteredPassword)=>{
-    return await bcrypt.compare(enteredPassword,this.password);
-}
+
 
 userSchema.methods.getJWTToken=()=>{
     return jwt.sign({id:this._id},process.env.JWT_SECRET_KEY,{
-        expiresIn:process.env.JWT_EXPIRE
+        expiresIn: process.env.JWT_EXPIRE
     })
 };
 
