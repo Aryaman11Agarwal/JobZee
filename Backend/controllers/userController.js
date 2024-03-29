@@ -90,7 +90,7 @@ const login=catchAsyncError(async (req,res,next)=>{
             }
         
             else{
-                console.log("in error");
+                
                return next(err);
             }
         

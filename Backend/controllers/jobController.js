@@ -1,3 +1,4 @@
+const catchAysncError = require("../middlewares/catchAsyncError.js");
 const catchAsyncError = require("../middlewares/catchAsyncError.js");
 const { ErrorHandler } = require("../middlewares/error.js");
 const jobModel = require("../models/jobModel.js");
@@ -59,17 +60,91 @@ const postjob = catchAsyncError(async (req, res, next) => {
   })
 
 
-
-
-
-res.status(200).json({
+  res.status(200).json({
     success:true,
     message:"Job posted successfully"
+  })
+  
+
+})
+
+
+const getmyJobs=catchAsyncError(async (req,res,next)=>{
+const user=req.user;
+
+if(user.role==='Job Seeker'){
+  return next(new ErrorHandler("Job seeker does not has any jobs"));
+}
+
+
+const jobs=await jobModel.find({postedBy:user._id});
+res.status(200).json({
+  success:true,
+  jobs
 })
 
 
 
-});
 
 
-module.exports = { getAllJobs,postjob };
+})
+
+
+const updateJob=catchAysncError(async (req,res,next)=>{
+  const user=req.user;
+
+  const role=user.role;
+
+  if(role==='Job Seeker'){
+    return next(new ErrorHandler("Job seeker does not has any jobs"));
+  }
+
+  const jobId=req.params.id;
+
+  let job=await jobModel.findOne({_id:jobId});
+
+  if(!job){
+    return next(new ErrorHandler("No such job exists"));
+  }
+
+
+  job =await jobModel.findByIdAndUpdate(jobId,req.body,{
+    new:true,
+    runValidators:true,
+    useFindAndModify:false
+  });
+
+  res.status(200).json({
+    success:true,
+    job,
+  })
+})
+
+
+const deleteJob=catchAsyncError(async (req,res,next)=>{
+  const user=req.user;
+  const role=user.role;
+
+  if(role==='Job Seeker')
+  return next(new ErrorHandler("Job seeker does not has any jobs"));
+
+  const jobId=req.params.id;
+
+  const job=await jobModel.findById(jobId);
+  if(!job){
+    return next(new ErrorHandler("No such Job exists"));
+  }
+
+await jobModel.deleteOne({_id:jobId});
+
+res.status(200).json({
+  success:true,
+  message:"Job deleted Successfully"
+})
+
+})
+
+
+
+
+module.exports = { getAllJobs,postjob,getmyJobs,updateJob,deleteJob}
