@@ -15,7 +15,7 @@ import NotFound from './components/Not Found/NotFound.jsx'
 import Application from './components/Applications/Application.jsx'
 import MyApplications from './components/Applications/MyApplications.jsx'
 import ResumeModal from './components/Applications/ResumeModal.jsx'
-import axios from 'axios'
+
 import {Toaster} from 'react-hot-toast'
 
 
@@ -23,15 +23,30 @@ function App() {
     const {isAuthorised,setIsAuthorised,setUser}=useContext(Context);
 
     useEffect(()=>{
-     const fetchUser=async()=>{
-      try{
-       const response=await axios.get("",{withCredentials:true});
-       setUser( response.data.user)
+     const fetchUser=()=>{
+
+      fetch("http://localhost:8000/api/v1/user/getUser",{
+        method:"GET",
+        credentials:"include"
+
+       })
+       .then((res)=>res.json())
+       .then((data)=>{
+        if(data.success===true){
+          setUser( data.user)
        setIsAuthorised(true);
-      }catch(error){
-           setIsAuthorised(false);
-      }
-     }
+        }
+        else{
+          setIsAuthorised(false);
+        }
+        
+       })
+       .catch((e)=>{
+        console.log(e);
+        
+       
+       })
+ }
 
      fetchUser()
     },[isAuthorised])
@@ -41,7 +56,8 @@ function App() {
   return (
     <>
      <Router>
-        <Navbar></Navbar>
+        
+       <Navbar></Navbar>
        <Routes>
          <Route path='/login' element={<Login></Login>}/>
          <Route path='/register' element={<Register></Register>}/>
@@ -58,6 +74,8 @@ function App() {
        </Routes>
        <Footer/>
      </Router>
+
+    
     </>
   )
 }
