@@ -41,10 +41,11 @@ const jobSchema=mongoose.Schema({
         minLength:4,
         maxLength:9
     },
-    SalaryTo:{
+    salaryto:{
         type:Number,
         minLength:4,
         maxLength:9
+       
     },
     expired:{
         type:Boolean,

@@ -8,12 +8,12 @@ const jwt = require('jsonwebtoken');
 const register=catchAsyncError(async (req,res,next)=>{
     const {name,email,phone,role,password}=req.body;
     if(!name || !email || !phone || !role || !password){
-        return next(new ErrorHandler("Please fill full registration form"));
+    return next(new ErrorHandler("Please fill full registration form"));
     }
 
     const isEmail= await userModel.findOne({email:email});
 
-    if(isEmail){
+if(isEmail){
         return next(new ErrorHandler("Email already exists"));
     }
 
@@ -24,7 +24,7 @@ const register=catchAsyncError(async (req,res,next)=>{
         role,
         password
     });
-
+  
     jwt.sign({id:user._id},process.env.JWT_SECRET_KEY,(err,token)=>{
         if(!err){
           const options={

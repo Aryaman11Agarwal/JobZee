@@ -27,21 +27,21 @@ const postjob = catchAsyncError(async (req, res, next) => {
     country,
     city,
     location,
+   salaryFrom,
+    salaryto,
     fixedSalary,
-    salaryFrom,
-    salaryTo,
   } = req.body;
 
   if (!title || !description || !category || !country || !city || !location)
     return next(new ErrorHandler("Fill all the fields", 400));
 
-  if((!salaryFrom||salaryTo)&&!fixedSalary)
+  if((!salaryFrom||!salaryto)&&!fixedSalary)
   return next(new ErrorHandler("Please provide either fixed salaty or ranged Salary", 400));
 
-  if(salaryFrom&&salaryTo&&fixedSalary)
+  if(salaryFrom&&salaryto&&fixedSalary)
   return next(new ErrorHandler("Please provide either fixed salaty or ranged Salary not both", 400));
 
-  if(!fixedSalary&&(salaryFrom>salaryTo))
+  if(!fixedSalary&&(salaryFrom>salaryto))
   return next(new ErrorHandler("Please provide the ranged salary correctly", 400));
 
   const postedBy=req.user._id;
@@ -55,14 +55,15 @@ const postjob = catchAsyncError(async (req, res, next) => {
     location,
     fixedSalary,
     salaryFrom,
-    salaryTo,
+    salaryto,
     postedBy
   })
 
 
   res.status(200).json({
     success:true,
-    message:"Job posted successfully"
+    message:"Job posted successfully",
+    job
   })
   
 
@@ -80,7 +81,7 @@ if(user.role==='Job Seeker'){
 const jobs=await jobModel.find({postedBy:user._id});
 res.status(200).json({
   success:true,
-  jobs
+  jobs:jobs,
 })
 
 
@@ -144,7 +145,24 @@ res.status(200).json({
 
 })
 
+const getSingleJob=async(req,res,next)=>{
+  const {id}=req.params;
+  try{
+    const job=await jobModel.findById(id);
+    if(!job){
+      return next(new ErrorHandler("Job not found",404));
+    }
+    res.status(200).json({
+      success:true,
+      job
+    })
+  }
+  catch(e){
+    return next(new ErrorHandler("Cast error/Job not found",400));
+  }
+}
 
 
 
-module.exports = { getAllJobs,postjob,getmyJobs,updateJob,deleteJob}
+
+module.exports = { getAllJobs,postjob,getmyJobs,updateJob,deleteJob,getSingleJob}
