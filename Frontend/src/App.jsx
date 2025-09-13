@@ -25,7 +25,7 @@ function App() {
     useEffect(()=>{
      const fetchUser=()=>{
 
-      fetch("http://localhost:8000/api/v1/user/getUser",{
+      fetch("https://jobzee-to3i.onrender.com/api/v1/user/getUser",{
         method:"GET",
         credentials:"include"
 

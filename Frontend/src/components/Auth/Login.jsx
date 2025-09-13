@@ -27,7 +27,7 @@ const Login = () => {
 
      e.preventDefault();
 
-     fetch("http://localhost:8000/api/v1/user/login",{
+     fetch("https://jobzee-to3i.onrender.com/api/v1/user/login",{
       method:"POST",
       body:JSON.stringify({email, role, password }),
       headers:{

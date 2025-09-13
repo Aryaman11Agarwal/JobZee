@@ -37,7 +37,7 @@ const PostJob = () => {
   }
 
   try {
-    const res = await fetch("http://localhost:8000/api/v1/job/post", {
+    const res = await fetch("https://jobzee-to3i.onrender.com/api/v1/job/post", {
       method: "POST",
       body: JSON.stringify(payload),
       headers: {

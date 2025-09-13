@@ -17,7 +17,7 @@ const MyJobs = () => {
     const fetchJobs = async () => {
       try {
         const { data } = await axios.get(
-          "http://localhost:8000/api/v1/job/getmyjobs",
+          "https://jobzee-to3i.onrender.com/api/v1/job/getmyjobs",
           { withCredentials: true }
         );
         setMyJobs(data.jobs);
@@ -48,7 +48,7 @@ const MyJobs = () => {
   const handleUpdateJob = async (jobId) => {
     const updatedJob = myJobs.find((job) => job._id === jobId);
     await axios
-      .put(`http://localhost:8000/api/v1/job/updateJob/${jobId}`, updatedJob, {
+      .put(`https://jobzee-to3i.onrender.com/api/v1/job/updateJob/${jobId}`, updatedJob, {
         withCredentials: true,
       })
       .then((res) => {
@@ -63,7 +63,7 @@ const MyJobs = () => {
   //Function For Deleting Job
   const handleDeleteJob = async (jobId) => {
     await axios
-      .delete(`http://localhost:8000/api/v1/job/deleteJob/${jobId}`, {
+      .delete(`https://jobzee-to3i.onrender.com/api/v1/job/deleteJob/${jobId}`, {
         withCredentials: true,
       })
       .then((res) => {

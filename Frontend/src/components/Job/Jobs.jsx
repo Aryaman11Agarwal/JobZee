@@ -10,7 +10,7 @@ const Jobs = () => {
   const navigateTo = useNavigate();
   useEffect(() => {
     
-    fetch("http://localhost:8000/api/v1/job/getall", {
+    fetch("https://jobzee-to3i.onrender.com/api/v1/job/getall", {
       method: "GET",
       credentials: "include",
     })

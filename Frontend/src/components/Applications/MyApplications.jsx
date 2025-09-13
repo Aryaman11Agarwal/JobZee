@@ -18,7 +18,7 @@ const MyApplications = () => {
     try {
       if (user && user.role === "Employer") {
         axios
-          .get("http://localhost:8000/api/v1/application/employer/getall", {
+          .get("https://jobzee-to3i.onrender.com/api/v1/application/employer/getall", {
             withCredentials: true,
           })
           .then((res) => {
@@ -26,7 +26,7 @@ const MyApplications = () => {
           });
       } else {
         axios
-          .get("http://localhost:8000/api/v1/application/jobseeker/getall", {
+          .get("https://jobzee-to3i.onrender.com/api/v1/application/jobseeker/getall", {
             withCredentials: true,
           })
           .then((res) => {
@@ -45,7 +45,7 @@ const MyApplications = () => {
   const deleteApplication = (id) => {
     try {
       axios
-        .delete(`http://localhost:8000/api/v1/application/delete/${id}`, {
+        .delete(`https://jobzee-to3i.onrender.com/api/v1/application/delete/${id}`, {
           withCredentials: true,
         })
         .then((res) => {

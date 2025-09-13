@@ -29,7 +29,7 @@ const Register = () => {
 
      e.preventDefault();
 
-     fetch("http://localhost:8000/api/v1/user/register",{
+     fetch("https://jobzee-to3i.onrender.com/api/v1/user/register",{
       method:"POST",
       body:JSON.stringify({ name, phone, email, role, password }),
       headers:{

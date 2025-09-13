@@ -10,7 +10,7 @@ const JobDetails = () => {
   const {isAuthorised,user}=useContext(Context);
 
   useEffect(()=>{
-    fetch(`http://localhost:8000/api/v1/job/${id}`,{
+    fetch(`https://jobzee-to3i.onrender.com/api/v1/job/${id}`,{
       method:"GET",
       credentials:"include"
     })
