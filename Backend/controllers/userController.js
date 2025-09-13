@@ -78,7 +78,9 @@ const login=catchAsyncError(async (req,res,next)=>{
             if(!err){
               const options={
                 maxAge :process.env.COOKIE_EXPIRE*24*60*60*1000,
-                httpOnly:true
+                httpOnly:true,
+                secure:true,
+                sameSite:"None"
               }
             
               res.status(200).cookie("token",token,options).send({
@@ -112,7 +114,10 @@ const login=catchAsyncError(async (req,res,next)=>{
 const logout=catchAsyncError(async (req,res,next)=>{
     res.status(201).cookie("token","",{
         httpOnly:true,
-        expires:new Date(Date.now())
+        expires:new Date(Date.now()),
+         secure:true,
+        sameSite:"None"
+
     }).json({
         success:true,
         message:"User logged out sucessfully"

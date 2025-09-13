@@ -18,68 +18,54 @@ const PostJob = () => {
   const { isAuthorised, user } = useContext(Context);
 
   const handleJobPost = async (e) => {
-    e.preventDefault();
-    if (salaryType === "Fixed Salary") {
-      setSalaryFrom("");
-      setSalaryFrom("");
-    } else if (salaryType === "Ranged Salary") {
-      setFixedSalary("");
-    } else {
-      setSalaryFrom("");
-      setSalaryTo("");
-      setFixedSalary("");
-    }
-    
-    fetch("http://localhost:8000/api/v1/job/post",{
-      method:"POST",
-      body:fixedSalary.length >= 4?JSON.stringify({
-        title,
-        description,
-        category,
-        country,
-        city,
-        location,
-        fixedSalary,
-      }):JSON.stringify({
-        title,
-        description,
-        category,
-        country,
-        city,
-        location,
-        salaryFrom,
-       salaryto,
-      }),
-      headers:{
-        "Content-type":"application/json"
-      },
-      credentials:"include"
-     })
-      .then((response) => response.json())
-      .then((data)=>{
-        if(data.success===true){
-          toast("Job posted successfully");
-          setTitle("");
-          setCategory(""),
-          setDescription(""),
-          setCity(""),
-          setCountry(""),
-          setLocation(""),
-          setFixedSalary(""),
-          setSalaryFrom(""),
-          setSalaryto(""),
-          setLocation("")
-        
-        }
+  e.preventDefault();
 
-        else{
-          toast.error(data.message);
-        }
-      })
-      .catch((err) => {
-       toast.error("some error occured while posting");
-      });
+  let payload = {
+    title,
+    description,
+    category,
+    country,
+    city,
+    location,
   };
+
+  if (salaryType === "Fixed Salary") {
+    payload.fixedSalary = fixedSalary;
+  } else if (salaryType === "Ranged Salary") {
+    payload.salaryFrom = salaryFrom;
+    payload.salaryto = salaryto;
+  }
+
+  try {
+    const res = await fetch("http://localhost:8000/api/v1/job/post", {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      toast("Job posted successfully");
+      setTitle("");
+      setCategory("");
+      setDescription("");
+      setCity("");
+      setCountry("");
+      setLocation("");
+      setFixedSalary("");
+      setSalaryFrom("");
+      setSalaryto("");   // ✅ correct reset
+    } else {
+      toast.error(data.message);
+    }
+  } catch (err) {
+    toast.error("Some error occurred while posting");
+  }
+};
+
 
   const navigateTo = useNavigate();
   if (!isAuthorised || (user && user.role !== "Employer")) {
@@ -178,8 +164,8 @@ const PostJob = () => {
                     <input
                       type="number"
                       placeholder="Salary To"
-                      value={salaryTo}
-                      onChange={(e) => setSalaryTo(e.target.value)}
+                      value={salaryto}
+                      onChange={(e) => setSalaryto(e.target.value)}
                     />
                   </div>
                 )}

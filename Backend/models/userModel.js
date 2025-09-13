@@ -17,6 +17,8 @@ const userSchema=mongoose.Schema({
     },
     phone:{
         type:Number,
+        minLength:[10,"Minimum 10 length is required"],
+        maxLength:[10,"Maximum 10 length is required"],
         required:[true,"Please provide a phone number"]
     },
     password:{
